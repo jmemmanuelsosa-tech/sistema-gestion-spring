@@ -18,11 +18,6 @@ public class ClienteWebController {
         this.clienteService = clienteService;
     }
 
-    @GetMapping("/")
-    public String inicio() {
-        return "redirect:/login";
-    }
-
     @GetMapping("/clientes")
     public String mostrarPantallaClientes(HttpSession session, Model model) {
         // Seguridad de navegacion: Si no inicio sesion, lo devuelve al login

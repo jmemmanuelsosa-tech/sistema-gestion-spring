@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cuenta Corriente - NEXUS GESTIÓN</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230d6efd'><path d='M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882l-7.5-4zM8 9.433 1.562 6 8 2.567 14.438 6 8 9.433z'/></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link th:href="@{/css/estilos.css}" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navegación -->
+    <div th:replace="~{navegation/navegacion :: menuSuperior('clientes', 'Clientes > Cuenta Corriente > ' + ${cliente.nombre} + ' ' + ${cliente.apellido})}"></div>
+
+    <div class="container-fluid px-4 py-3">
+
+        <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show py-2 shadow-sm"><i class="bi bi-check-circle-fill me-2"></i><span th:text="${mensajeExito}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+        <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show py-2 shadow-sm"><i class="bi bi-exclamation-octagon-fill me-2"></i><span th:text="${mensajeError}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+
+        <!-- CABECERA DEL CLIENTE Y SALDO TOTAL -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm bg-white">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0 fw-bold text-dark"><i class="bi bi-person-badge text-primary me-2"></i><span th:text="${cliente.apellido} + ', ' + ${cliente.nombre}"></span></h4>
+                            <p class="text-muted small mb-0 mt-1" th:text="'DNI: ' + (${cliente.dni != null ? cliente.dni : 'N/A'}) + ' | Tel: ' + (${cliente.telefono != null ? cliente.telefono : 'N/A'})"></p>
+                        </div>
+                        <div class="text-end">
+                            <span class="d-block text-muted small fw-bold mb-1">SALDO ACTUAL</span>
+                            
+                            <h2 th:classappend="${saldoActual > 0 ? 'text-danger' : 'text-success'}" class="mb-0 fw-bold">
+                                $ <span th:text="${#numbers.formatDecimal(saldoActual, 1, 'POINT', 0, 'COMMA')}">0</span>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <!-- COLUMNA IZQUIERDA: Cargar nueva operación -->
+            <div class="col-lg-4">
+                <div class="erp-card">
+                    <div class="erp-card-header bg-light fw-bold"><i class="bi bi-plus-circle me-2"></i>Registrar Movimiento</div>
+                    <div class="p-3">
+                        <form th:action="@{/cuenta-corriente/guardar}" th:object="${nuevaOperacion}" method="post">
+                            <input type="hidden" name="clienteId" th:value="${cliente.id}">
+
+                            <!-- TIPO DE OPERACIÓN -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small">Tipo de Movimiento <span class="text-danger">*</span></label>
+                                <select th:field="*{tipoOperacion}" class="form-select border-secondary fw-bold" required>
+                                    <option value="" disabled selected>Seleccione...</option>
+                                    <option value="DEUDA" class="text-danger">CARGAR DEUDA</option>
+                                    <option value="PAGO" class="text-success">REGISTRAR PAGO</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small">Monto ($) <span class="text-danger">*</span></label>
+                                <input type="text" id="montoVisible" class="form-control form-control-lg fw-bold text-end" placeholder="0" required onkeyup="formatearMiles(this)">
+                                
+                                <!-- INPUT OCULTO: Guarda el número puro para que Java lo procese sin error -->
+                                <input type="hidden" th:field="*{monto}" id="montoReal">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small">Detalle / Concepto</label>
+                                <input type="text" th:field="*{concepto}" class="form-control">
+                            </div>
+
+                            <!-- EL DESPLEGABLE DE VENDEDORES -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold small">Atendido por <span class="text-danger">*</span></label>
+                                <select th:field="*{vendedor}" class="form-select bg-light" required>
+                                    <option value="" disabled selected>Seleccione Vendedor...</option>
+                                    <option value="Emmanuel">Emmanuel</option>
+                                    <option value="Marcelo">Marcelo</option>
+                                    <option value="María">María</option>
+                                    <option value="Cajero Tarde">Cajero Tarde</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 fw-bold py-2"><i class="bi bi-floppy me-1"></i> Guardar Movimiento</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: Historial con colores -->
+            <div class="col-lg-8">
+                <div class="erp-card">
+                    <div class="erp-card-header"><i class="bi bi-clock-history me-2"></i>Historial de Movimientos</div>
+                    <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                        <table class="table table-hover table-bordered align-middle mb-0">
+                            <thead class="table-dark sticky-top">
+                                <tr>
+                                    <th>Fecha y Hora</th>
+                                    <th>Tipo</th>
+                                    <th>Concepto</th>
+                                    <th>Vendedor</th>
+                                    <th class="text-end">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${#lists.isEmpty(historial)}">
+                                    <td colspan="5" class="text-center py-4 text-muted">Este cliente no tiene deudas ni pagos registrados.</td>
+                                </tr>
+
+                                <tr th:each="mov : ${historial}" 
+                                    th:classappend="${mov.tipoOperacion == 'PAGO' ? 'table-success' : 'table-danger'}">
+                                    
+                                    <td class="small" th:text="${#temporals.format(mov.fechaOperacion, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td class="fw-bold">
+                                        <i th:classappend="${mov.tipoOperacion == 'PAGO' ? 'bi-arrow-down-circle-fill text-success' : 'bi-arrow-up-circle-fill text-danger'}"></i>
+                                        <span th:text="${mov.tipoOperacion}"></span>
+                                    </td>
+                                    <td th:text="${mov.concepto != null && !mov.concepto.isBlank() ? mov.concepto : 'Sin detalle'}"></td>
+                                    <td class="fst-italic" th:text="${mov.vendedor}"></td>
+                                    
+                                    <td class="text-end fw-bold font-monospace text-dark">
+                                        $ <span th:text="${#numbers.formatDecimal(mov.monto, 1, 'POINT', 0, 'COMMA')}"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para formatear los miles en vivo -->
+    <script>
+        function formatearMiles(input) {
+            // Quitar todo lo que no sea número
+            let valor = input.value.replace(/\D/g, "");
+            
+            // Guardar el valor real sin puntos en el input oculto para Java
+            document.getElementById('montoReal').value = valor;
+            
+            // Formatear visualmente y devolver al input visible
+            if(valor !== "") {
+                input.value = new Intl.NumberFormat('es-AR').format(valor);
+            } else {
+                input.value = "";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -116,6 +116,10 @@
                                     <td th:text="${c.email != null ? c.email : '-'}"></td>
                                     
                                     <td class="text-end pe-3">
+                                        <!--Ir a la Cuenta Corriente -->
+                                        <a th:href="@{/cuenta-corriente/{id}(id=${c.id})}" class="btn btn-outline-success btn-sm py-0 px-2 me-1" title="Ver Deudas y Pagos">
+                                                <i class="bi bi-wallet2"></i> Cuenta
+                                        </a>
                                         <!-- Botón que invoca el modal de confirmación -->
                                         <button type="button" class="btn btn-outline-danger btn-sm py-0 px-2"
                                                 data-bs-toggle="modal" 

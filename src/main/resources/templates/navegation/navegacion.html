@@ -67,7 +67,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:classappend="${moduloActivo == 'cobranzas' ? 'active' : ''}" href="#" onclick="alert('Módulo de Cobranzas en construcción'); return false;">
+                            <a class="nav-link" th:classappend="${moduloActivo == 'cobranzas' ? 'active' : ''}" th:href="@{/cobranzas}">
                                 <i class="bi bi-cash-coin me-1"></i> Cobranzas
                             </a>
                         </li>
