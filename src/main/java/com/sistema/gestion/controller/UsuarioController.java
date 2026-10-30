@@ -1,6 +1,6 @@
 package com.sistema.gestion.controller;
 import com.sistema.gestion.model.Usuario;
-import com.sistema.gestion.services.UsuarioService;
+import com.sistema.gestion.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

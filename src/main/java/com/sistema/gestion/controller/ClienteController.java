@@ -1,6 +1,6 @@
 package com.sistema.gestion.controller;
 import com.sistema.gestion.model.Cliente;
-import com.sistema.gestion.services.ClienteService;
+import com.sistema.gestion.service.ClienteService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.sistema.gestion.controller;
 import com.sistema.gestion.model.Usuario;
-import com.sistema.gestion.services.UsuarioService;
+import com.sistema.gestion.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

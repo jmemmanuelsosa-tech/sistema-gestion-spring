@@ -1,4 +1,4 @@
-package com.sistema.gestion.services;
+package com.sistema.gestion.service;
 
 import com.sistema.gestion.model.Cobranza;
 import com.sistema.gestion.repository.CobranzaRepository;

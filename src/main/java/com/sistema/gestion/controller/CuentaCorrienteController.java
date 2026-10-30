@@ -2,8 +2,8 @@ package com.sistema.gestion.controller;
 
 import com.sistema.gestion.model.Cliente;
 import com.sistema.gestion.model.Cobranza;
-import com.sistema.gestion.services.ClienteService;
-import com.sistema.gestion.services.CobranzaService;
+import com.sistema.gestion.service.ClienteService;
+import com.sistema.gestion.service.CobranzaService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

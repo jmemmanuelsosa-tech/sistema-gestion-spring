@@ -1,4 +1,4 @@
-package com.sistema.gestion.services;
+package com.sistema.gestion.service;
 import com.sistema.gestion.model.Cliente;
 import com.sistema.gestion.repository.ClienteRepository;
 import java.util.List;

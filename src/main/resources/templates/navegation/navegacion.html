@@ -57,12 +57,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:classappend="${moduloActivo == 'productos' ? 'active' : ''}" href="#" onclick="alert('Módulo de Productos en construcción'); return false;">
+                            <a class="nav-link" th:classappend="${moduloActivo == 'productos' ? 'active' : ''}" th:href="@{/productos}">
                                 <i class="bi bi-box-seam me-1"></i> Productos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" th:classappend="${moduloActivo == 'ventas' ? 'active' : ''}" href="#" onclick="alert('Módulo de Ventas en construcción'); return false;">
+                            <a class="nav-link" th:classappend="${moduloActivo == 'ventas' ? 'active' : ''}" th:href="@{/ventas}">
                                 <i class="bi bi-cart-check me-1"></i> Ventas
                             </a>
                         </li>
