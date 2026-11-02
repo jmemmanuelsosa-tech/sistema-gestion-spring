@@ -1,5 +1,6 @@
 package com.sistema.gestion.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,9 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "ventas")
@@ -33,6 +36,9 @@ public class Venta {
     // Ej: "EFECTIVO", "TRANSFERENCIA", "CUENTA_CORRIENTE"
     @Column(name = "metodo_pago", nullable = false, length = 50)
     private String metodoPago;
+    
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    private List<DetalleVenta> detalles = new java.util.ArrayList<>();
 
     @PrePersist
     protected void alRegistrar() {
@@ -79,6 +85,14 @@ public class Venta {
 
     public void setMetodoPago(String metodoPago) {
         this.metodoPago = metodoPago;
+    }
+
+    public List<DetalleVenta> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(List<DetalleVenta> detalles) {
+        this.detalles = detalles;
     }
 
 }

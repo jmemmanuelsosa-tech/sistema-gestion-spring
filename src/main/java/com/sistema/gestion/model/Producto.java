@@ -27,6 +27,9 @@ public class Producto {
 
     @Column(length = 255)
     private String descripcion;
+    
+    @Column(nullable = false)
+    private Integer stock = 0;
 
     // Getters y Setters
 
@@ -68,6 +71,14 @@ public class Producto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
     
 }

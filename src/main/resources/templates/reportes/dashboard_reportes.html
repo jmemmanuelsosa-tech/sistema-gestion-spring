@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes - NEXUS GESTIÓN</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link th:href="@{/css/estilos.css}" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="~{navegation/navegacion :: menuSuperior('reportes', 'Reportes > Tablero de Comando')}"></div>
+
+    <div class="container px-4 py-4">
+        
+        <div class="mb-4">
+            <h3 class="fw-bold text-dark mb-0"><i class="bi bi-bar-chart-fill text-info me-2"></i>Estado General del Negocio</h3>
+            <p class="text-muted small">Métricas y cuentas corrientes activas.</p>
+        </div>
+
+        <!-- TARJETAS DE MÉTRICAS -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm erp-card bg-white">
+                    <div class="card-body">
+                        <h6 class="text-muted fw-bold mb-2 text-uppercase small">Deuda en la Calle</h6>
+                        <h2 class="mb-0 fw-bold text-danger font-monospace">
+                            $ <span th:text="${#numbers.formatDecimal(totalDeuda, 1, 'POINT', 0, 'COMMA')}"></span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm erp-card bg-white">
+                    <div class="card-body">
+                        <h6 class="text-muted fw-bold mb-2 text-uppercase small">Clientes Registrados</h6>
+                        <h2 class="mb-0 fw-bold text-dark"><i class="bi bi-people me-2 text-primary"></i><span th:text="${totalClientes}"></span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm erp-card bg-white">
+                    <div class="card-body">
+                        <h6 class="text-muted fw-bold mb-2 text-uppercase small">Productos en Catálogo</h6>
+                        <h2 class="mb-0 fw-bold text-dark"><i class="bi bi-box-seam me-2 text-warning"></i><span th:text="${totalProductos}"></span></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="erp-card shadow-sm mb-4 p-3">
+            <h6 class="fw-bold mb-3">Facturación de los últimos 7 días</h6>
+            <canvas id="graficoVentas" height="80"></canvas>
+        </div>
+        
+        <!-- TABLA TOP DEUDORES -->
+        <div class="erp-card shadow-sm">
+            <div class="erp-card-header bg-danger text-white fw-bold">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Ranking de Clientes Morosos
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">Cliente</th>
+                            <th>Teléfono</th>
+                            <th class="text-end">Saldo Adeudado</th>
+                            <th class="text-end pe-4">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(listaDeudores)}">
+                            <td colspan="4" class="text-center py-5 text-muted">No hay clientes con saldos deudores. ¡Excelente!</td>
+                        </tr>
+                        <tr th:each="deudor : ${listaDeudores}">
+                            <td class="ps-3 fw-bold text-dark" th:text="${deudor.cliente.apellido} + ', ' + ${deudor.cliente.nombre}"></td>
+                            <td th:text="${deudor.cliente.telefono != null ? deudor.cliente.telefono : 'Sin teléfono'}"></td>
+                            <td class="text-end fw-bold font-monospace text-danger">
+                                $ <span th:text="${#numbers.formatDecimal(deudor.saldoDeudor, 1, 'POINT', 0, 'COMMA')}"></span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <a th:href="@{/cuenta-corriente/{id}(id=${deudor.cliente.id})}" class="btn btn-outline-success btn-sm fw-bold">
+                                    Cobrar / Ver Cuenta
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const ctx = document.getElementById('graficoVentas').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                    datasets: [{
+                        label: 'Ingresos ($)',
+                        data: [15000, 22000, 18000, 31000, 28000, 45000, 12000], // Aquí luego inyectas datos reales
+                        backgroundColor: '#0d6efd',
+                        borderRadius: 4
+                    }]
+                }
+            });
+    </script>
+</body>
+</html>

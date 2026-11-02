@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'Ticket #' + ${venta.id} + ' - NEXUS GESTIÓN'"></title>
+    <style>
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Courier New', Courier, monospace; 
+            width: 100%; 
+            margin: 0; 
+            padding: 20px; 
+            font-size: 20px; 
+            color: #000;
+        }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
+        th, td { border-bottom: 2px dashed #000; padding: 10px 0; word-wrap: break-word; }
+        
+        /* Forzar anchos de columna para que el total no se corte */
+        th:nth-child(1), td:nth-child(1) { width: 15%; text-align: left; }
+        th:nth-child(2), td:nth-child(2) { width: 55%; text-align: left; }
+        th:nth-child(3), td:nth-child(3) { width: 30%; text-align: right; padding-right: 5px; }
+        
+        h2 { margin-bottom: 5px; font-size: 35px; }
+        h3 { margin-top: 20px; font-size: 25px; }
+    </style>
+</head>
+<body onload="window.print()">
+    <div class="text-center">
+        <h2>NEXUS GESTIÓN</h2>
+        <p>Ticket Nº <span th:text="${venta.id}"></span><br>
+        <span th:text="${#temporals.format(venta.fechaHora, 'dd/MM/yyyy HH:mm')}"></span></p>
+    </div>
+    <table>
+        <thead><tr><th>Cant</th><th>Detalle</th><th class="text-right">Total</th></tr></thead>
+        <tbody>
+            <tr th:each="det : ${venta.detalles}">
+                <td th:text="${det.cantidad}"></td>
+                <td th:text="${det.producto.nombre}"></td>
+                <td class="text-right" th:text="'$' + ${#numbers.formatDecimal(det.subtotal, 1, 'POINT', 0, 'COMMA')}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <h3 class="text-right">TOTAL: $<span th:text="${#numbers.formatDecimal(venta.total, 1, 'POINT', 0, 'COMMA')}"></span></h3>
+    <p class="text-center">¡Gracias por su compra!</p>
+</body>
+</html>
