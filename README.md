@@ -13,6 +13,7 @@ Sistema integral de gestión comercial, facturación y control de cuentas corrie
 ## Stack Tecnológico
 
 - **Backend:** Java 21, Spring Boot 3, Spring Data JPA
+- **Seguridad:** Spring Security 6, BCrypt, protección CSRF
 - **Frontend:** Thymeleaf, Bootstrap 5, JavaScript (Fetch API), Chart.js
 - **Base de Datos:** MySQL (Hibernate / Relaciones OneToMany/ManyToOne)
 - **Arquitectura:** MVC Layered (Model, Repository, Service, Controller, DTOs)
@@ -34,3 +35,12 @@ Sistema integral de gestión comercial, facturación y control de cuentas corrie
    ```
 
 4. Acceder en el navegador web a `http://localhost:8080`.
+
+## Seguridad
+
+- Autenticación por formulario con Spring Security 6.
+- Contraseñas almacenadas con hash BCrypt.
+- Protección CSRF en formularios y peticiones AJAX.
+
+> Al iniciar por primera vez se crea el usuario `admin` / `admin123`.
+> Estas credenciales son solo para desarrollo local: cambiarlas antes de desplegar el sistema.
