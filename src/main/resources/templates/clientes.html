@@ -125,7 +125,7 @@
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#modalConfirmarEliminar"
                                                 th:data-url="@{/clientes/eliminar/{id}(id=${c.id})}"
-                                                onclick="document.getElementById('btnConfirmarEliminacion').href = this.getAttribute('data-url');">
+                                                onclick="document.getElementById('formEliminarCliente').action = this.getAttribute('data-url');">
                                             <i class="bi bi-trash3"></i> Borrar
                                         </button>
                                     </td>
@@ -154,7 +154,9 @@
                 <div class="modal-footer justify-content-center bg-light">
                     <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
                     <!-- El href lo inyecta dinámicamente JS -->
-                    <a href="#" id="btnConfirmarEliminacion" class="btn btn-danger px-4 fw-bold">Eliminar</a>
+                    <form id="formEliminarCliente" th:action="@{/clientes/eliminar}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger px-4 fw-bold">Eliminar</button>
+                    </form>
                 </div>
             </div>
         </div>

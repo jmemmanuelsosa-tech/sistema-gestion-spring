@@ -24,7 +24,6 @@ public class CuentaCorrienteController {
 
     @GetMapping("/{clienteId}")
     public String verCuenta(@PathVariable Long clienteId, Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
 
         Cliente cliente = clienteService.buscarPorId(clienteId); 
         

@@ -36,7 +36,6 @@ public class VentaController {
     // Pantalla del Punto de Venta
     @GetMapping("/nueva")
     public String nuevaVenta(Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
 
         model.addAttribute("clientes", clienteService.listarClientes());
         model.addAttribute("productos", productoService.listarTodos());
@@ -69,7 +68,6 @@ public class VentaController {
     @GetMapping
     public String dashboardVentas(@RequestParam(required = false, defaultValue = "hoy") String filtro, 
                                   Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
 
         List<Venta> ventasFiltradas = ventaService.obtenerVentasFiltradas(filtro);
         Double totalRecaudado = ventaService.calcularTotal(ventasFiltradas);

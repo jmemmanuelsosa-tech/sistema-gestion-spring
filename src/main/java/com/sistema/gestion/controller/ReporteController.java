@@ -30,7 +30,6 @@ public class ReporteController {
 
     @GetMapping
     public String verReportes(Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
 
         List<Cliente> todosLosClientes = clienteService.listarClientes();
         List<DeudorDTO> listaDeudores = new ArrayList<>();

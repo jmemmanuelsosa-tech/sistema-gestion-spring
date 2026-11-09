@@ -20,7 +20,6 @@ public class ProductoController {
 
     @GetMapping
     public String listarProductos(Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
         model.addAttribute("listaProductos", productoService.listarTodos());
         model.addAttribute("moduloActivo", "productos");
         return "productos"; 
@@ -28,7 +27,6 @@ public class ProductoController {
 
     @GetMapping("/nuevo")
     public String formularioNuevo(Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
         model.addAttribute("producto", new Producto());
         model.addAttribute("moduloActivo", "productos");
         return "productos/producto_form";
@@ -36,7 +34,6 @@ public class ProductoController {
 
     @GetMapping("/editar/{id}")
     public String formularioEditar(@PathVariable Long id, Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
         model.addAttribute("producto", productoService.buscarPorId(id));
         model.addAttribute("moduloActivo", "productos");
         return "productos/producto_form";

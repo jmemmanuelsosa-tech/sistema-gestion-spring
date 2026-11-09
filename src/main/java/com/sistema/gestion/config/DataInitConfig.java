@@ -1,34 +1,26 @@
-package com.sistema.gestion;
+package com.sistema.gestion.config;
+
 import com.sistema.gestion.model.Usuario;
 import com.sistema.gestion.repository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- *
- * @author sosap
- */
-@Component
-public class DataInitializer implements CommandLineRunner{
-    private final UsuarioRepository usuarioRepository;
+@Configuration
+public class DataInitConfig {
 
-    public DataInitializer(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
-
-    public void run(String... args) {
-        // Verifica si existe el usuario 'admin'. Si no existe, lo crea automaticamente.
-        if (!usuarioRepository.existsByUsername("admin")) {
-            Usuario admin = new Usuario();
-            admin.setUsername("admin");
-            admin.setPassword("admin1234"); // Cumple los 8 caracteres minimos de seguridad
-            admin.setRol("Administrador");
-            admin.setActivo(true);
-            admin.setIntentosFallidos(0);
-
-            usuarioRepository.save(admin);
-            System.out.println("--> [SISTEMA INICIADO]: Usuario por defecto creado");
-            System.out.println("--> Usuario: admin | Contraseña: admin1234");
-        }
+    @Bean
+    public CommandLineRunner initAdmin(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+        return args -> {
+            if (usuarioRepository.findByUsername("admin").isEmpty()) {
+                Usuario admin = new Usuario();
+                admin.setUsername("admin");
+                admin.setPassword(passwordEncoder.encode("admin123")); 
+                admin.setRol("ADMIN");
+                admin.setActivo(true);
+                usuarioRepository.save(admin);
+            }
+        };
     }
 }

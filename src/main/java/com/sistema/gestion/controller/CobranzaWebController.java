@@ -17,7 +17,6 @@ public class CobranzaWebController {
 
     @GetMapping("/cobranzas")
     public String inicioCobranzas(Model model, HttpSession session) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/login";
 
         // Traemos a todos los clientes para que el cajero elija a quién cobrarle
         model.addAttribute("listaClientes", clienteService.listarClientes());

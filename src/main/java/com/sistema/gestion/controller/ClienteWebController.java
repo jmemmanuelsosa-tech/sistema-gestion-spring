@@ -20,11 +20,6 @@ public class ClienteWebController {
 
     @GetMapping("/clientes")
     public String mostrarPantallaClientes(HttpSession session, Model model) {
-        // Seguridad de navegacion: Si no inicio sesion, lo devuelve al login
-        if (session.getAttribute("usuarioLogueado") == null) {
-            return "redirect:/login";
-        }
-
         model.addAttribute("listaClientes", clienteService.listarClientes());
         model.addAttribute("nuevoCliente", new Cliente());
         model.addAttribute("moduloActivo", "clientes"); // Marca el boton activo en el menu
@@ -43,7 +38,7 @@ public class ClienteWebController {
         return "redirect:/clientes";
     }
 
-    @GetMapping("/clientes/eliminar/{id}")
+    @PostMapping("/clientes/eliminar/{id}")
     public String eliminarDesdePantalla(@PathVariable Long id, RedirectAttributes mensajero) {
         try {
             clienteService.eliminarCliente(id);

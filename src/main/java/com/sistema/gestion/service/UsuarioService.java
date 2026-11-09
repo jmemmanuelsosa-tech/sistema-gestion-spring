@@ -1,19 +1,20 @@
 package com.sistema.gestion.service;
+
 import com.sistema.gestion.model.Usuario;
 import com.sistema.gestion.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
-/**
- *
- * @author sosap
- */
+
 @Service
 public class UsuarioService {
-    private static final int MAX_INTENTOS_FALLIDOS = 3;
-    private final UsuarioRepository usuarioRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Usuario> listarTodos() {
@@ -27,36 +28,11 @@ public class UsuarioService {
             throw new IllegalArgumentException("Error: El nombre de usuario '" + usuario.getUsername() + "' ya está en uso.");
         }
 
-        // Si no se especifica rol, asignamos uno por defecto seguro
         if (usuario.getRol() == null || usuario.getRol().isBlank()) {
             usuario.setRol("VENDEDOR");
         }
 
-        return usuarioRepository.save(usuario);
-    }
-
-    public Usuario validarLogin(String username, String passwordIngresada) {
-        Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Error de acceso: Usuario no encontrado."));
-
-        if (!usuario.isActivo()) {
-            throw new IllegalStateException("Cuenta bloqueada por seguridad. Contacte al administrador.");
-        }
-
-        // Comparacion directa temporal (sin hash aun, pero con control de intentos)
-        if (!usuario.getPassword().equals(passwordIngresada)) {
-            int nuevosIntentos = usuario.getIntentosFallidos() + 1;
-            usuario.setIntentosFallidos(nuevosIntentos);
-
-            if (nuevosIntentos >= MAX_INTENTOS_FALLIDOS) {
-                usuario.setActivo(false);
-            }
-            usuarioRepository.save(usuario);
-            throw new IllegalArgumentException("Contraseña incorrecta. Intento " + nuevosIntentos + " de " + MAX_INTENTOS_FALLIDOS);
-        }
-
-        // Si entra bien, reiniciamos el contador de fallos
-        usuario.setIntentosFallidos(0);
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 
